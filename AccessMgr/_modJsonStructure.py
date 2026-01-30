@@ -29,8 +29,9 @@ class Container(TypedDict):
     """
     classe générique de container dont doit hériter un contener pour etre pris en charge !
     """
-    id: str
-    type: str
+    id: str         # un id
+    type: str       # reprise du type pour le casting
+    duration: int   # la durée de vie du logger!
 
 class MailServerConfig(TypedDict):
     """

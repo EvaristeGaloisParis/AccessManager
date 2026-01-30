@@ -18,6 +18,7 @@ class MailLogin:
     __smtp: Optional[MailServerConfig] = None
     __imap: Optional[MailServerConfig] = None
     __f_timestamp: float = 0
+    __f_end_of_life: float = 0
 
     @classmethod
     def init_from_config(cls, st_mail_id: str,
@@ -67,6 +68,7 @@ class MailLogin:
 
         self.__id = f'{env_key(an_env=an_environment, st_subname=st_sub_name)}_{data_mail["id"].replace(" ","_")}'
         self.__f_timestamp = dt.datetime.now().timestamp()
+        self.__f_end_of_life = self.__f_timestamp + float(data_mail["duration"])
 
         if "imap" in data_mail: self.__imap = data_mail["imap"]
         if "smtp" in data_mail: self.__smtp = data_mail["smtp"]
@@ -81,6 +83,16 @@ class MailLogin:
     @property
     def timestamp(self) -> float:
         return self.__f_timestamp
+
+    @property
+    def validity_end(self) -> Optional[float]:
+        # validité permanente
+        if self.__f_end_of_life <= self.__f_timestamp: return None
+        return self.__f_end_of_life
+
+    def is_alive(self) -> bool:
+        if self.__f_end_of_life <= self.__f_timestamp: return True
+        return dt.datetime.now().timestamp() < self.__f_end_of_life
 
     def user_mail(self) -> str:
         """
@@ -98,7 +110,12 @@ class MailLogin:
         Returns:
             str qui est la clef du compte
         """
+
+        # si le token est périmé, on renvoie blanc
+        if not self.is_alive(): return ""
+
         return os.getenv(self.__key(st_element=__ELT__KEY__))
+
 
     def server_smtp(self) -> MailServerConfig:
         """
@@ -120,7 +137,16 @@ class MailLogin:
         return self.__imap
 
     def __repr__(self) -> str:
-        return f'Mail: {self.__id} - imap: {["configured", "None"][self.__imap is None]} - smtp: {["configured", "None"][self.__smtp is None]}'
+        st_validity_end: str = "Infinity"
+        if self.validity_end is not None:
+            st_validity_end = f'{dt.datetime.fromtimestamp(self.validity_end):%d-%b-%Y %H:%M:%S}'
+
+        return (f'Mail: {self.__id} - '
+                f'imap: {["configured", "None"][self.__imap is None]} - '
+                f'smtp: {["configured", "None"][self.__smtp is None]} - '
+                f'validity: start: {dt.datetime.fromtimestamp(self.__f_timestamp):%d-%b-%Y %H:%M:%S} -> '
+                f'end: {st_validity_end} -> '
+                f'alive: {self.is_alive()}')
 
     def __str__(self) -> str:
         return f'{self.__id}'
