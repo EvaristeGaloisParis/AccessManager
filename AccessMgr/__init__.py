@@ -21,7 +21,7 @@ imap: MailServerConfig = (host, port): optionnel: config imap
 from typing import Optional
 
 from AccessMgr._modConstantes import AccessEnvironment
-from AccessMgr._modJsonStructure import AccessData, MailContainer, ProviderContainer
+from AccessMgr._modJsonStructure import AccessData, MailContainer, ProviderContainer, MailServerConfig
 from AccessMgr._modMailLogin import MailLogin
 
 __version__ = "0.1.0"
