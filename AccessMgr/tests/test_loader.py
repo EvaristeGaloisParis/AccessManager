@@ -1,5 +1,5 @@
 #from ..modLoader import AccessEnvironment, load_config, AccessData
-import AccessMgr.modLoader as mLoad
+import AccessMgr._modLoader as mLoad
 
 
 def test_loader_when_its_ok() -> None:
