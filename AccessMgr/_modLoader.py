@@ -9,8 +9,12 @@ from AccessMgr._modConstantes import AccessEnvironment
 from pathlib import Path
 
 
-__DEFAULT_PATH__: Final[str] = '../../access/access.json'
+# Variable locale pour les tests du choix par défaut
+__b__INNER: bool = False
 
+# Constntes : les chemins par défauts!
+__DEFAULT_PATH__: Final[str] = '../access/access.json'
+__INNER_DEFAULT_PATH__: Final[str] = '../../access/access.json'
 
 def env_key(an_env: AccessEnvironment, st_subname: str) -> str:
 
@@ -46,7 +50,7 @@ def load_config(st_path: Optional[str] = None,
         if st_subname is None or st_subname.strip() == "":
             raise ValueError(f"Pour l'environement: <{an_environment};>, le subname est obligatoire et doit etre non vide!")
 
-    if st_path is None: st_path = '../../access/access.json'
+    if st_path is None: st_path = [__DEFAULT_PATH__, __INNER_DEFAULT_PATH__][__b__INNER]
 
     # Validation du chemin
     if not st_path or not isinstance(st_path, str):
@@ -100,16 +104,16 @@ def load_config(st_path: Optional[str] = None,
 
 
 if __name__ == "__main__":
-
+    __b__INNER = True
     data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_subname='prod')
     print(data)
 
-    data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_subname='global')
+    data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_subname='global', st_path=__INNER_DEFAULT_PATH__)
     print(data)
 
     try:
         # on s'attend a une erreur car il faut au moins un nom de sous environment
-        data: AccessData = load_config(an_environment=AccessEnvironment.UAT)
+        data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_path=__INNER_DEFAULT_PATH__)
     except ValueError as e:
         print(e)
     except Exception as e:
@@ -118,7 +122,7 @@ if __name__ == "__main__":
 
     try:
         # on s'attend a une erreur car le nom de sous environment toto n'existe pas!
-        data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_subname="toto")
+        data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_subname="toto", st_path=__INNER_DEFAULT_PATH__)
     except KeyError as e:
         print(e)
     except Exception as e:
@@ -135,8 +139,10 @@ if __name__ == "__main__":
 
     try:
         # on s'attend a une erreur car le nom de sous environment toto n'existe pas!
-        data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_path="")
+        data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_path=__INNER_DEFAULT_PATH__)
     except ValueError as e:
         print(e)
     except Exception as e:
         print(f'unexpected error!: {type(e)}')
+
+    __b__INNER = False

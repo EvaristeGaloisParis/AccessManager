@@ -30,7 +30,7 @@ class Container(TypedDict):
     classe générique de container dont doit hériter un contener pour etre pris en charge !
     """
     id: str
-
+    type: str
 
 class MailServerConfig(TypedDict):
     """
