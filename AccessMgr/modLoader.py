@@ -3,11 +3,10 @@ permet de lire le fichier de parametrage
 
 """
 from typing import Optional
-from modJsonStructure import Container, MailContainer, MailServerConfig, js, AccessData
-from modConstantes import AccessEnvironment
+from AccessMgr.modJsonStructure import Container, MailContainer, MailServerConfig, js, AccessData
+from AccessMgr.modConstantes import AccessEnvironment
 import os
 from pathlib import Path
-
 
 
 def __env_key(an_env: AccessEnvironment, st_subname: str) -> str:
@@ -101,3 +100,39 @@ if __name__ == "__main__":
     data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_subname='prod')
     print(data)
 
+    data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_subname='global')
+    print(data)
+
+    try:
+        # on s'attend a une erreur car il faut au moins un nom de sous environment
+        data: AccessData = load_config(an_environment=AccessEnvironment.UAT)
+    except ValueError as e:
+        print(e)
+    except Exception as e:
+        print(f'unexpected error!: {e}')
+
+
+    try:
+        # on s'attend a une erreur car le nom de sous environment toto n'existe pas!
+        data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_subname="toto")
+    except KeyError as e:
+        print(e)
+    except Exception as e:
+        print(f'unexpected error!: {e}')
+
+
+    try:
+        # on s'attend a une erreur car le nom de sous environment toto n'existe pas!
+        data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_path="toto.json")
+    except FileNotFoundError as e:
+        print(e)
+    except Exception as e:
+        print(f'unexpected error!: {type(e)}')
+
+    try:
+        # on s'attend a une erreur car le nom de sous environment toto n'existe pas!
+        data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_path="")
+    except ValueError as e:
+        print(e)
+    except Exception as e:
+        print(f'unexpected error!: {type(e)}')
