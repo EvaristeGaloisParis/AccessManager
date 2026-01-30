@@ -4,6 +4,16 @@ Packqage pour gérer les droits des différentes sources sur un projet.
 Les sources peuvent être des :
 
 - mail: utilisation de MailContainer pour modéliser dans le fichier, et MailLogin pour l'utilisation dans le code
+MailContainer doit avoir les items suivants:
+id: str : son nom
+type: str == mail impérativement
+duration: str: la durée de vie de la connexion. Mettre -1 pour une durée infinie
+key: str: la clef api
+mail: str: l'adresse mail cible
+smtp: MailServerConfig = (host, port): optionnel: config smtp
+imap: MailServerConfig = (host, port): optionnel: config imap
+
+
 - provider: utilisation de ProviderContainer pour modéliser le fichier, l'objet n'est pas encore créé
 
 
