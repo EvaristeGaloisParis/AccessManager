@@ -26,7 +26,7 @@ from AccessMgr._modMailLogin import MailLogin
 
 __version__ = "0.1.0"
 
-__all__ = ["AccessEnvironment", "AccessData", "MailContainer", "MailLogin"]
+__all__ = ["AccessEnvironment", "AccessData", "MailContainer", "MailLogin", "MailServerConfig"]
 
 
 def get_mail_config(mail_id: str, an_environment: AccessEnvironment, st_sub_name: Optional[str] = None,
