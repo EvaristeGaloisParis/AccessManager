@@ -1,15 +1,22 @@
 """
+Packqage pour gérer les droits des différentes sources sur un projet.
+
+Les sources peuvent être des :
+
+- mail: utilisation de MailContainer pour modéliser dans le fichier, et MailLogin pour l'utilisation dans le code
+- provider: utilisation de ProviderContainer pour modéliser le fichier, l'objet n'est pas encore créé
+
 
 """
 from typing import Optional
 
 from AccessMgr._modConstantes import AccessEnvironment
-from AccessMgr._modJsonStructure import AccessData
+from AccessMgr._modJsonStructure import AccessData, MailContainer, ProviderContainer
 from AccessMgr._modMailLogin import MailLogin
 
 __version__ = "0.1.0"
 
-__all__ = ["AccessEnvironment", "AccessData", "MailLogin"]
+__all__ = ["AccessEnvironment", "AccessData", "MailContainer", "MailLogin"]
 
 
 def get_mail_config(mail_id: str, an_environment: AccessEnvironment, st_sub_name: Optional[str] = None,
@@ -41,3 +48,11 @@ def get_mail_config(mail_id: str, an_environment: AccessEnvironment, st_sub_name
                                       st_path=st_config_path)
 
 
+def set_new_mail_config(config: MailContainer, mail_id: str, an_environment: AccessEnvironment, st_sub_name: Optional[str] = None,
+                        st_config_path: Optional[str] = None) -> bool:
+    pass
+
+
+def delete_mail_config(mail_id: str, an_environment: AccessEnvironment, st_sub_name: Optional[str] = None,
+                        st_config_path: Optional[str] = None) -> bool:
+    pass

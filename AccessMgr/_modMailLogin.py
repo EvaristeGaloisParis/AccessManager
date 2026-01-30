@@ -1,7 +1,12 @@
+"""
+encapsule le mécanisme de l'objet MailLogin qui permet de contenir les id, login
+
+pour instancier un MailLogin il faut utiliser la fonction: init_from_config
+"""
+
 from typing import Optional, Final
 import os
 import datetime as dt
-
 
 from AccessMgr._modConstantes import AccessEnvironment
 from AccessMgr._modJsonStructure import AccessData, MailServerConfig, MailContainer
@@ -13,12 +18,19 @@ __ELT__KEY__: Final[str] = 'key'
 
 
 class MailLogin:
-    """gère les logins / mot de passe et configurations de boites mails pour différents environment dans un projet"""
-    __id: str = ""
-    __smtp: Optional[MailServerConfig] = None
-    __imap: Optional[MailServerConfig] = None
-    __f_timestamp: float = 0
-    __f_end_of_life: float = 0
+    """
+    gère les logins / mot de passe et configurations de boites mails pour différents environment dans un projet
+
+    instanciation via: init_from_config() se connectera tout seul a la base de données.
+
+    inclut une gestion de durée de vie des identifiants. Ils deviennent inaccessibles une fois la durée de vie passée.
+    """
+
+    __id: str = ""                              # l'id dans le fichier de configuration
+    __smtp: Optional[MailServerConfig] = None   # les parametrages techniques facultatifs
+    __imap: Optional[MailServerConfig] = None   # les parametrages techniques facultatifs
+    __f_timestamp: float = 0                    # l'instant de création
+    __f_end_of_life: float = 0                  # l'instant de péremption
 
     @classmethod
     def init_from_config(cls, st_mail_id: str,
@@ -27,10 +39,10 @@ class MailLogin:
         """
 
         Args:
-            st_mail_id:
-            an_environment:
-            st_sub_name:
-            st_path:
+            st_mail_id: l'id de la configuration a aller chercher
+            an_environment: l'environnement a requeter
+            st_sub_name: le sous nom dans l'environnement
+            st_path: le chemin vers le fichier de configuration
 
         Returns:
             les informations du compte mail. None en cas de probleme.
@@ -59,14 +71,14 @@ class MailLogin:
         if "type" not in data_mail:
             raise KeyError(f"Configuration named {st_mail_id} in {an_environment} in file: {st_path} has no type")
 
-        if data_mail["type"].strip().lower() != "mail":
+        if data_mail["type"].strip().lower() != __ELT__MAIL__:
             raise TypeError(f"Configuration named {st_mail_id} in {an_environment} in file: {st_path} has incorrect type: {data_mail['type']}")
 
         return cls(data_mail=data_mail, an_environment=an_environment, st_sub_name=st_sub_name)
 
     def __init__(self, data_mail: MailContainer, an_environment: AccessEnvironment, st_sub_name: str):
 
-        self.__id = f'{env_key(an_env=an_environment, st_subname=st_sub_name)}_{data_mail["id"].replace(" ","_")}'
+        self.__id = f'{env_key(an_env=an_environment, st_subname=st_sub_name)}_{data_mail["id"].replace(" ", "_")}'
         self.__f_timestamp = dt.datetime.now().timestamp()
         self.__f_end_of_life = self.__f_timestamp + float(data_mail["duration"])
 
@@ -79,6 +91,10 @@ class MailLogin:
 
     def __key(self, st_element: str) -> str:
         return f'{self.__id}__{st_element}__'
+
+    @property
+    def type(self) -> str:
+        return __ELT__MAIL__
 
     @property
     def timestamp(self) -> float:
