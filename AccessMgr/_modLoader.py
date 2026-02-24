@@ -104,8 +104,9 @@ def load_config(st_path: Optional[str] = None,
 
 
 if __name__ == "__main__":
+
     __b__INNER = True
-    data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_subname='prod')
+    data: AccessData = load_config(an_environment=AccessEnvironment.PROD, st_subname='prod', st_path=__INNER_DEFAULT_PATH__)
     print(data)
 
     data: AccessData = load_config(an_environment=AccessEnvironment.UAT, st_subname='global', st_path=__INNER_DEFAULT_PATH__)
