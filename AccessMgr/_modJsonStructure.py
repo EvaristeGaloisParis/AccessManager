@@ -54,6 +54,14 @@ class MailContainer(Container):
     imap: NotRequired[MailServerConfig]
 
 
+class Provider_MassiveData(Container):
+    """modelise nos droits sur le site MassiveDAta pour récuperer les données fines sur le forex et les commos"""
+    id: str
+    user_id: str
+    key: str
+    access_key_id: str
+
+
 class ProviderContainer(Container):
     key: str
 
