@@ -143,13 +143,13 @@ class ProviderKucoin:
             st_validity_end = f'{dt.datetime.fromtimestamp(self.validity_end):%d-%b-%Y %H:%M:%S}'
 
         return (f'inner_id: {self.__st_inner_id} - '
-                f'user_id: {self.__st_user_id} - '
+                f'user_id: {self.__st_user_name} - '
                 f'validity: start: {dt.datetime.fromtimestamp(self.__f_timestamp):%d-%b-%Y %H:%M:%S} -> '
                 f'end: {st_validity_end} -> '
                 f'alive: {self.is_alive()}')
 
     def __str__(self) -> str:
-        return f'{self.__st_user_id}'
+        return f'{self.__st_user_name}'
 
 
 
