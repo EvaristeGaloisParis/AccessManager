@@ -20,8 +20,6 @@ on retrouve:
     : local_hostname (optionnel)
 
 """
-
-
 from typing import Any, Optional, TypedDict, NotRequired
 import json as js
 
@@ -60,6 +58,17 @@ class Provider_MassiveData(Container):
     user_id: str
     key: str
     access_key_id: str
+
+
+class Provider_Kucoin(Container):
+    """modelise nos droits sur le site KuCoin"""
+    id: str
+    user_name: str
+    trd_pass: str
+    key: str
+    secret: str
+    phrase: str
+    uuid: str
 
 
 class ProviderContainer(Container):
