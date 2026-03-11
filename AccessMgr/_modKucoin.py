@@ -13,7 +13,11 @@ __PROVIDER_TYPE__: Final[str] = 'provider'
 
 
 class _ProviderElt(StrEnum):
-    """modélise tous les élément mis en mémoire pour le provider KuCoin"""
+    """
+    modélise tous les élément mis en mémoire pour le provider KuCoin
+
+    ne pas importer !
+    """
     KEY: Final[str] = '__KEY__'
     SECRET: Final[str] = '__SECRET__'
     PHRASE: Final[str] = '__PHRASE__'
@@ -159,7 +163,7 @@ if __name__ == "__main__":
     data: Provider_Kucoin = {"key":">> a key to push here <<", "id": "test", "duration": -1, "type": "provider",
                              "phrase":"a phrase", "uuid":"my uuid","secret":"my secret", "trd_pass":"a trd pass",
                              "user_name": "my user name" }
-    prvdr: ProviderKucoin = ProviderKucoin(provider=data, st_sub_name="",an_environment=AccessEnvironment.PROD)
+    prvdr: ProviderKucoin = ProviderKucoin(provider=data, st_sub_name="", an_environment=AccessEnvironment.PROD)
     print('\noutput')
     print(f'{prvdr.phrase()}')
     print(f'{prvdr.secret()}')
