@@ -60,9 +60,14 @@ class Provider_MassiveData(Container):
     access_key_id: str
 
 
+class Provider_Telegram(Container):
+    """modelise Telegram minimal droits"""
+    name: str
+    token: str
+    chat_id: str
+
 class Provider_Kucoin(Container):
     """modelise nos droits sur le site KuCoin"""
-    id: str
     user_name: str
     trd_pass: str
     key: str
