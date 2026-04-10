@@ -23,6 +23,7 @@ on retrouve:
 from typing import Any, Optional, TypedDict, NotRequired
 import json as js
 
+
 class Container(TypedDict):
     """
     classe générique de container dont doit hériter un contener pour etre pris en charge !
@@ -30,6 +31,7 @@ class Container(TypedDict):
     id: str         # un id
     type: str       # reprise du type pour le casting
     duration: int   # la durée de vie du logger!
+
 
 class MailServerConfig(TypedDict):
     """
@@ -54,10 +56,17 @@ class MailContainer(Container):
 
 class Provider_MassiveData(Container):
     """modelise nos droits sur le site MassiveDAta pour récuperer les données fines sur le forex et les commos"""
-    id: str
     user_id: str
     key: str
     access_key_id: str
+
+
+class Provider_DataBendo(Container):
+    """modelise nos droits sur le site DataBendo pour récuperer les données fines sur le forex et les commos"""
+    name: str
+    user_id: str
+    bendo_id: str
+    api_key: str
 
 
 class Provider_Telegram(Container):
@@ -65,6 +74,7 @@ class Provider_Telegram(Container):
     name: str
     token: str
     chat_id: str
+
 
 class Provider_Kucoin(Container):
     """modelise nos droits sur le site KuCoin"""
@@ -74,6 +84,8 @@ class Provider_Kucoin(Container):
     secret: str
     phrase: str
     uuid: str
+
+
 
 
 class ProviderContainer(Container):
