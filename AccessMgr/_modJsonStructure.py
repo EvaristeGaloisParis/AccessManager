@@ -76,6 +76,13 @@ class Provider_Telegram(Container):
     chat_id: str
 
 
+class Provider_Healthcheck(Container):
+    """modelise un check de supervision type healthchecks.io (ou compatible).
+    On ne stocke que l'uuid (partie variable et sensible) ; la base de l'url est une constante du code."""
+    name: str
+    uuid: str
+
+
 class Provider_Kucoin(Container):
     """modelise nos droits sur le site KuCoin"""
     user_name: str
