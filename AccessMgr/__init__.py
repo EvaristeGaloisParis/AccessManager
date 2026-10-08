@@ -28,7 +28,7 @@ from AccessMgr._modKucoin import ProviderKucoin
 from AccessMgr._modTelegram import ProviderTelegram
 from AccessMgr._modDataBendo import ProviderDataBendo
 from AccessMgr._modHealthcheck import ProviderHealthcheck
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 __all__ = ["AccessEnvironment", "AccessData",
