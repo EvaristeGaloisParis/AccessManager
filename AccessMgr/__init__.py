@@ -21,6 +21,7 @@ imap: MailServerConfig = (host, port): optionnel: config imap
 from typing import Optional
 
 from AccessMgr._modConstantes import AccessEnvironment
+from AccessMgr._modLoader import set_default_config_path
 from AccessMgr._modJsonStructure import AccessData, MailContainer, ProviderContainer, MailServerConfig, Provider_DataBendo
 from AccessMgr._modMailLogin import MailLogin
 from AccessMgr._modMassiveProvider import ProviderMassiveData
@@ -28,10 +29,10 @@ from AccessMgr._modKucoin import ProviderKucoin
 from AccessMgr._modTelegram import ProviderTelegram
 from AccessMgr._modDataBendo import ProviderDataBendo
 from AccessMgr._modHealthcheck import ProviderHealthcheck
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
-__all__ = ["AccessEnvironment", "AccessData",
+__all__ = ["AccessEnvironment", "AccessData", "set_default_config_path",
            "MailContainer", "MailLogin", "MailServerConfig", "get_mail_config",
            "ProviderMassiveData", "get_massive_data_token",
            "ProviderTelegram", "get_telegram_config",

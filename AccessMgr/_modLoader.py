@@ -16,6 +16,39 @@ __b__INNER: bool = False
 __DEFAULT_PATH__: Final[str] = '../access/access.json'
 __INNER_DEFAULT_PATH__: Final[str] = '../../access/access.json'
 
+# Chemin par défaut configuré à l'exécution (singleton de process).
+# Prioritaire sur les constantes codées en dur, mais surchargeable au cas par cas
+# via l'argument st_path/st_config_path de chaque appel. None = non configuré.
+__g_st_default_config_path: Optional[str] = None
+
+
+def set_default_config_path(st_path: Optional[str]) -> None:
+    """
+    Définit le fichier de configuration par défaut pour tout le process.
+
+    À appeler une seule fois au démarrage de l'application. Ensuite, tous les
+    get_*() (kucoin, telegram, mail, databendo, healthcheck) utilisent ce chemin
+    quand on ne leur passe pas de st_config_path explicite.
+
+    L'argument st_config_path d'un appel reste prioritaire : on peut donc avoir
+    la plupart des accès dans le fichier par défaut, et surcharger ponctuellement
+    (ex: tester un provider depuis un autre fichier en cours de dev).
+
+    Args:
+        st_path: chemin du fichier JSON par défaut.
+                 **Passer None réinitialise explicitement** le comportement : on
+                 retombe alors sur les constantes codées en dur (__DEFAULT_PATH__).
+
+    Raises:
+        ValueError: si st_path est une chaîne vide (utiliser None pour réinitialiser).
+    """
+    global __g_st_default_config_path
+    if st_path is not None and (not isinstance(st_path, str) or not st_path.strip()):
+        raise ValueError("Le chemin par défaut doit être une chaîne non vide, "
+                         "ou None pour réinitialiser.")
+    __g_st_default_config_path = st_path
+
+
 def env_key(an_env: AccessEnvironment, st_subname: str) -> str:
 
     if an_env == AccessEnvironment.PROD:
@@ -31,7 +64,8 @@ def load_config(st_path: Optional[str] = None,
     Lit le fichier de paramétrage
 
     Args:
-        st_path: str: Chemin du fichier JSON (string) par défaut: '../../access/access.json'
+        st_path: str: Chemin du fichier JSON. Si None, on utilise le chemin défini par
+                 set_default_config_path(), sinon la constante codée en dur ('../access/access.json').
         an_environment: un environment. Si prod le subname est ignoré
         st_subname: le sous nom d'un environment
 
@@ -50,7 +84,11 @@ def load_config(st_path: Optional[str] = None,
         if st_subname is None or st_subname.strip() == "":
             raise ValueError(f"Pour l'environement: <{an_environment};>, le subname est obligatoire et doit etre non vide!")
 
-    if st_path is None: st_path = [__DEFAULT_PATH__, __INNER_DEFAULT_PATH__][__b__INNER]
+    # Résolution du chemin : appel explicite > défaut configuré > constantes codées en dur
+    if st_path is None:
+        st_path = __g_st_default_config_path
+    if st_path is None:
+        st_path = [__DEFAULT_PATH__, __INNER_DEFAULT_PATH__][__b__INNER]
 
     # Validation du chemin
     if not st_path or not isinstance(st_path, str):

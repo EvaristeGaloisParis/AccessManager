@@ -38,3 +38,47 @@ def test_load_config_error_cases():
             mLoad.load_config(**kwargs)
 
         assert err_mgr.type == case[3]
+
+
+@pytest.fixture(autouse=True)
+def _reset_default_path():
+    """Garantit un état propre : pas de défaut configuré avant/après chaque test."""
+    mLoad.set_default_config_path(None)
+    yield
+    mLoad.set_default_config_path(None)
+
+
+def test_default_path_used_when_no_explicit_path() -> None:
+    # une fois le défaut posé, load_config(st_path=None) doit lire ce fichier
+    mLoad.set_default_config_path(TESTING_PATH)
+    data: mLoad.AccessData = mLoad.load_config(an_environment=mLoad.AccessEnvironment.PROD,
+                                               st_subname='prod')
+    assert isinstance(data, dict)
+
+
+def test_explicit_path_overrides_default() -> None:
+    # le défaut pointe vers un fichier valide, mais l'appel explicite vers un
+    # fichier inexistant : l'explicite doit primer -> FileNotFoundError
+    mLoad.set_default_config_path(TESTING_PATH)
+    with pytest.raises(FileNotFoundError):
+        mLoad.load_config(an_environment=mLoad.AccessEnvironment.PROD,
+                          st_subname='prod', st_path="c:/dummy_override.json")
+
+
+def test_reset_with_none_clears_previous_default() -> None:
+    # un défaut invalide est bien consulté (FileNotFoundError), puis None l'efface :
+    # après reset + nouveau défaut valide, la lecture repasse. Déterministe (pas de CWD).
+    mLoad.set_default_config_path("c:/dummy_default.json")
+    with pytest.raises(FileNotFoundError):
+        mLoad.load_config(an_environment=mLoad.AccessEnvironment.PROD, st_subname='prod')
+
+    mLoad.set_default_config_path(None)
+    mLoad.set_default_config_path(TESTING_PATH)
+    data: mLoad.AccessData = mLoad.load_config(an_environment=mLoad.AccessEnvironment.PROD,
+                                               st_subname='prod')
+    assert isinstance(data, dict)
+
+
+def test_empty_default_path_raises() -> None:
+    with pytest.raises(ValueError):
+        mLoad.set_default_config_path("")

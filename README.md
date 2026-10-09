@@ -76,6 +76,30 @@ cfg = get_telegram_config(st_id="myBot", an_environment=AccessEnvironment.UAT,
                           st_sub_name="global", st_config_path=CONFIG)
 ```
 
+### Chemin de configuration par défaut *(depuis 0.1.2)*
+
+Plutôt que de répéter `st_config_path` à chaque appel, définissez-le **une seule
+fois** au démarrage avec `set_default_config_path`. Tous les `get_*()` l'utilisent
+ensuite automatiquement :
+
+```python
+import AccessMgr
+from AccessMgr import get_kucoin_token, get_databendo_config, AccessEnvironment
+
+AccessMgr.set_default_config_path("/chemin/vers/access.json")   # une fois au boot
+
+# plus besoin de st_config_path : le défaut est utilisé
+kc = get_kucoin_token(st_id="main", an_environment=AccessEnvironment.PROD)
+
+# l'argument explicite reste prioritaire : surcharge ponctuelle (ex. dev)
+db = get_databendo_config(st_id="feed", an_environment=AccessEnvironment.DEV,
+                          st_sub_name="test", st_config_path="/autre/access_dev.json")
+```
+
+> Passer `set_default_config_path(None)` **réinitialise** explicitement le
+> comportement (retour aux chemins par défaut codés en dur). Une chaîne vide lève
+> `ValueError`. L'argument `st_config_path` d'un appel prime toujours sur le défaut.
+
 ## Providers disponibles
 
 | Factory | Type JSON | Retourne |
