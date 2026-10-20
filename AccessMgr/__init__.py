@@ -29,7 +29,8 @@ from AccessMgr._modKucoin import ProviderKucoin
 from AccessMgr._modTelegram import ProviderTelegram
 from AccessMgr._modDataBendo import ProviderDataBendo
 from AccessMgr._modHealthcheck import ProviderHealthcheck
-__version__ = "0.1.2"
+from AccessMgr._modKraken import ProviderKraken
+__version__ = "0.1.5"
 
 
 __all__ = ["AccessEnvironment", "AccessData", "set_default_config_path",
@@ -38,7 +39,8 @@ __all__ = ["AccessEnvironment", "AccessData", "set_default_config_path",
            "ProviderTelegram", "get_telegram_config",
            "ProviderDataBendo", "get_databendo_config",
            "ProviderKucoin", "get_kucoin_token",
-           "ProviderHealthcheck", "get_healthcheck_config"]
+           "ProviderHealthcheck", "get_healthcheck_config",
+           "ProviderKraken", "get_kraken_config"]
 
 
 
@@ -148,6 +150,33 @@ def get_kucoin_token(st_id: str, an_environment: AccessEnvironment, st_sub_name:
 
     return ProviderKucoin.init_from_config(st_id=st_id, an_environment=an_environment,
                                                 st_sub_name=st_sub_name, st_path=st_config_path)
+
+
+def get_kraken_config(st_id: str, an_environment: AccessEnvironment, st_sub_name: Optional[str] = None, st_config_path: Optional[str] = None) -> ProviderKraken:
+    """
+    cree un objet ProviderKraken qui porte la cle API Kraken (key + secret).
+    Le champ 'support' ('spot' ou 'fut') indique la venue de la cle (api.kraken.com vs futures.kraken.com).
+
+    Args:
+        st_id: str: l'id utilise dans le gestionnaire de droits ! attention case sensible !
+        an_environment: un environment choisi entre: prod, uat, dev
+        st_sub_name: le nom du sous environment (si nous ne sommes pas en prod)
+        st_config_path: un chemin qui pointe vers le fichier de configuration json !
+
+    Returns:
+        un objet ProviderKraken. Ne pas logger les informations qu'il contient !!!!
+
+    Raises:
+        FileNotFoundError: Si le fichier n'existe pas
+        PermissionError: Si pas de permissions de lecture
+        json.JSONDecodeError: Si le JSON est mal formate
+        ValueError: Si le chemin est vide ou invalide; ou si l'environement demande est mal configure
+        KeyError: si la configuration est vide, ou l'envionment x subname n'est pas dans le fichier de config
+        TypeError: si la configuration n'est pas de type provider (kraken) !
+    """
+    return ProviderKraken.init_from_config(st_id=st_id, an_environment=an_environment,
+                                           st_sub_name=st_sub_name, st_path=st_config_path)
+
 
 def get_massive_data_token(st_id: str, an_environment: AccessEnvironment, st_sub_name: Optional[str] = None, st_config_path: Optional[str] = None) -> ProviderMassiveData:
     """

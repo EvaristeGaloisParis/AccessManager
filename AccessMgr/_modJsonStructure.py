@@ -93,6 +93,17 @@ class Provider_Kucoin(Container):
     uuid: str
 
 
+class Provider_Kraken(Container):
+    """modelise nos droits sur Kraken (spot api.kraken.com OU futures futures.kraken.com).
+    Deux secrets : key (publique) et secret (privee, encodee base64). Pas de passphrase.
+    'support' indique la VENUE de la cle ('spot' ou 'fut') : une cle spot ne marche que sur
+    l'API spot, une cle futures que sur l'API futures. Ne JAMAIS logger key/secret."""
+    user_name: str
+    key: str
+    secret: str
+    support: NotRequired[str]   # 'spot' (defaut) ou 'fut'
+
+
 
 
 class ProviderContainer(Container):

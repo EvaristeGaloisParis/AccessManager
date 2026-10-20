@@ -1,8 +1,8 @@
 # accessmgr
 
 Chargement et distribution **sécurisés** de credentials (mail, Telegram, KuCoin,
-DataBento, healthcheck) depuis un fichier JSON externe — **sans jamais exposer de
-secret en clair dans le code**.
+Kraken, DataBento, healthcheck) depuis un fichier JSON externe — **sans jamais exposer
+de secret en clair dans le code**.
 
 > Le nom de distribution est `accessmgr`, le package importable est `AccessMgr`.
 
@@ -39,10 +39,24 @@ Chaque entrée est préfixée par son type (`telegram_`, `kucoin_`, `healthcheck
     "healthcheck_nightly": {
       "id": "nightly", "type": "healthcheck", "duration": -1,
       "name": "nightly job", "uuid": "<healthchecks-uuid>"
+    },
+    "provider_kraken_meanrev": {
+      "id": "meanrev", "type": "provider", "support": "spot", "duration": -1,
+      "user_name": "Kraken MeanRev", "key": "<api-key>", "secret": "<api-secret-base64>"
     }
   }
 }
 ```
+
+> **Objet Kraken** — remplir une entrée `provider_kraken_<id>` :
+> - **clé de l'objet** = `provider_kraken_` suivi de la valeur de `id` (ils doivent concorder) ;
+> - `id` : identifiant **technique** passé à `get_kraken_config(st_id=...)` (sensible à la casse) ;
+> - `type` : toujours `"provider"` ;
+> - `support` : **`"spot"`** (API `api.kraken.com`) ou **`"fut"`** (API `futures.kraken.com`) — une clé
+>   spot ne s'authentifie que sur l'API spot, une clé futures que sur l'API futures. Défaut : `"spot"` ;
+> - `duration` : durée de vie en secondes (`-1` = permanent) ;
+> - `user_name` : libellé humain (affiché dans les logs, **non sensible**) ;
+> - `key` : clé **publique** (API Key) ; `secret` : clé **privée** (base64). **Jamais** de clé en clair ailleurs.
 
 > ⚠️ Ce fichier contient vos secrets : gardez-le **hors du dépôt git** et à accès restreint.
 
@@ -67,6 +81,16 @@ chat_id = tg.chat_id()
 hc = get_healthcheck_config(st_id="nightly", an_environment=AccessEnvironment.PROD,
                             st_config_path=CONFIG)
 ping_url = hc.url()          # https://hc-ping.com/<uuid> (base = constante du code)
+
+# Kraken (spot ou futures selon le champ 'support')
+from AccessMgr import get_kraken_config
+kr = get_kraken_config(st_id="meanrev", an_environment=AccessEnvironment.PROD,
+                       st_config_path=CONFIG)
+api_key = kr.key()           # clé publique
+api_secret = kr.secret()     # clé privée (base64)
+venue = kr.support           # 'spot' ou 'fut' -> aiguille le bon connecteur
+if kr.is_spot:
+    ...                      # api.kraken.com
 ```
 
 Pour les environnements hors production, un `st_sub_name` est obligatoire :
@@ -106,7 +130,8 @@ db = get_databendo_config(st_id="feed", an_environment=AccessEnvironment.DEV,
 |---------|-----------|----------|
 | `get_mail_config` | `mail` | `MailLogin` (SMTP/IMAP) |
 | `get_telegram_config` | `telegram` | `ProviderTelegram` (`token()`, `chat_id()`) |
-| `get_kucoin_token` | `kucoin` | `ProviderKucoin` |
+| `get_kucoin_token` | `provider` (`provider_kuCoin_<id>`) | `ProviderKucoin` |
+| `get_kraken_config` | `provider` (`provider_kraken_<id>`) | `ProviderKraken` (`key()`, `secret()`, `support`, `is_spot`/`is_fut`) |
 | `get_massive_data_token` | `massivedata` | `ProviderMassiveData` |
 | `get_databendo_config` | `databento` | `ProviderDataBendo` |
 | `get_healthcheck_config` | `healthcheck` | `ProviderHealthcheck` (`url()`, `uuid()`) |

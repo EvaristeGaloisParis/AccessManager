@@ -5,6 +5,21 @@ Toutes les évolutions notables de ce projet sont documentées ici.
 Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
+## [0.1.5] - 2026-10-20
+
+### Ajouté
+- **`ProviderKraken`** + factory **`get_kraken_config`** : gestion des clés API Kraken.
+  - Deux secrets : `key` (clé publique) et `secret` (clé privée, base64). Pas de passphrase.
+  - Champ **`support`** : `"spot"` (API `api.kraken.com`) ou `"fut"` (API `futures.kraken.com`) —
+    une clé spot ne s'authentifie que sur l'API spot, une clé futures que sur l'API futures.
+    Défaut `"spot"` ; toute autre valeur lève `ValueError`. Propriétés `support`, `is_spot`, `is_fut`.
+  - Entrée JSON : clé `provider_kraken_<id>`, `type: "provider"`. Secrets poussés en variables
+    d'environnement, jamais loggés (absents de `repr`/`str`), avec contrôle de durée de vie.
+  - README mis à jour (exemple JSON + usage) pour expliquer comment remplir un objet Kraken.
+
+> Note : la 0.1.4 a été publiée manuellement (sans provenance/attestation) — à **yank**.
+> La 0.1.5 est publiée via la CI (GitHub Release → Trusted Publishing), provenance signée rétablie.
+
 ## [0.1.2] - 2026-10-09
 
 ### Ajouté
