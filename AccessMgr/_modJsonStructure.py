@@ -69,6 +69,14 @@ class Provider_DataBendo(Container):
     api_key: str
 
 
+class Provider_Coinalyze(Container):
+    """modelise nos droits sur Coinalyze (donnee derivee crypto : open interest,
+    long/short, liquidations, funding). Une seule cle API. Ne JAMAIS logger api_key."""
+    name: str
+    user_id: str
+    api_key: str
+
+
 class Provider_Telegram(Container):
     """modelise Telegram minimal droits"""
     name: str

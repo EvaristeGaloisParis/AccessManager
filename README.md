@@ -134,6 +134,7 @@ db = get_databendo_config(st_id="feed", an_environment=AccessEnvironment.DEV,
 | `get_kraken_config` | `provider` (`provider_kraken_<id>`) | `ProviderKraken` (`key()`, `secret()`, `support`, `is_spot`/`is_fut`) |
 | `get_massive_data_token` | `massivedata` | `ProviderMassiveData` |
 | `get_databendo_config` | `databento` | `ProviderDataBendo` |
+| `get_coinalyze_config` | `provider` (`provider_coinalyze_<id>`) | `ProviderCoinalyze` (`api_key()`) |
 | `get_healthcheck_config` | `healthcheck` | `ProviderHealthcheck` (`url()`, `uuid()`) |
 
 ## Sécurité

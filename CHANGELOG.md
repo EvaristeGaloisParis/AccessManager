@@ -5,6 +5,17 @@ Toutes les évolutions notables de ce projet sont documentées ici.
 Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
+## [0.1.6] - 2026-11-13
+
+### Ajouté
+- **`ProviderCoinalyze`** + factory **`get_coinalyze_config`** : gestion de la clé API Coinalyze
+  (donnée dérivée crypto : open interest, long/short, liquidations, funding).
+  - Une seule clé (`api_key`). Entrée JSON : clé `provider_coinalyze_<id>`, `type: "provider"`,
+    champs `id`, `name`, `user_id`, `duration`, `api_key`.
+  - La clé est poussée en variable d'environnement, jamais loggée (absente de `repr`/`str`),
+    avec contrôle de durée de vie (`is_alive`, `validity_end`). Propriété d'accès : `api_key()`.
+  - Tests auto-contenus (`tests/test_coinalyze.py`), README mis à jour.
+
 ## [0.1.5] - 2026-10-20
 
 ### Ajouté

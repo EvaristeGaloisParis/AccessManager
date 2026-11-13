@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "accessmgr"
-version = "0.1.5"
-description = "Chargement et distribution securises de credentials (mail, Telegram, KuCoin, Kraken, DataBento, healthcheck) depuis un fichier JSON externe, sans jamais exposer de secret en clair dans le code."
+version = "0.1.6"
+description = "Chargement et distribution securises de credentials (mail, Telegram, KuCoin, Kraken, DataBento, Coinalyze, healthcheck) depuis un fichier JSON externe, sans jamais exposer de secret en clair dans le code."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"

@@ -30,6 +30,7 @@ from AccessMgr._modTelegram import ProviderTelegram
 from AccessMgr._modDataBendo import ProviderDataBendo
 from AccessMgr._modHealthcheck import ProviderHealthcheck
 from AccessMgr._modKraken import ProviderKraken
+from AccessMgr._modCoinalyze import ProviderCoinalyze
 __version__ = "0.1.5"
 
 
@@ -40,7 +41,8 @@ __all__ = ["AccessEnvironment", "AccessData", "set_default_config_path",
            "ProviderDataBendo", "get_databendo_config",
            "ProviderKucoin", "get_kucoin_token",
            "ProviderHealthcheck", "get_healthcheck_config",
-           "ProviderKraken", "get_kraken_config"]
+           "ProviderKraken", "get_kraken_config",
+           "ProviderCoinalyze", "get_coinalyze_config"]
 
 
 
@@ -68,6 +70,27 @@ def get_databendo_config(st_id: str, an_environment: AccessEnvironment, st_sub_n
     """
     return ProviderDataBendo.init_from_config(st_id=st_id, an_environment=an_environment,
                                              st_sub_name=st_sub_name, st_path=st_config_path)
+
+
+def get_coinalyze_config(st_id: str, an_environment: AccessEnvironment, st_sub_name: Optional[str] = None, st_config_path: Optional[str] = None) -> ProviderCoinalyze:
+    """
+    cree un objet ProviderCoinalyze qui porte la cle API Coinalyze (donnee derivee
+    crypto : open interest, long/short, liquidations, funding).
+
+    Args:
+        st_id: l'id utilise dans le gestionnaire de droits (case sensible)
+        an_environment: prod, uat, dev
+        st_sub_name: le nom du sous-environnement (si pas en prod)
+        st_config_path: chemin vers le fichier de configuration json
+
+    Returns:
+        un objet ProviderCoinalyze. Ne pas logger les informations qu'il contient !!!!
+
+    Raises:
+        FileNotFoundError, PermissionError, json.JSONDecodeError, ValueError, KeyError, TypeError
+    """
+    return ProviderCoinalyze.init_from_config(st_id=st_id, an_environment=an_environment,
+                                              st_sub_name=st_sub_name, st_path=st_config_path)
 
 
 
